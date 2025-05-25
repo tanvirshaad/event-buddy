@@ -1,8 +1,9 @@
-import { Body, Injectable } from '@nestjs/common';
+import { BadRequestException, Body, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { CreateEventDto } from './dtos/create-event.dto';
+import { UpdateEventDto } from './dtos/update-event.dto';
 
 @Injectable()
 export class EventsService {
@@ -11,14 +12,19 @@ export class EventsService {
     private readonly eventRepository: Repository<Event>,
   ) {}
 
-  public async createEvent(
-    @Body() createEventDto: CreateEventDto,
-  ): Promise<Event> {
+  public async createEvent(createEventDto: CreateEventDto): Promise<Event> {
+    const eventDate = new Date(createEventDto.date);
+
+    if (eventDate <= new Date()) {
+      throw new BadRequestException('Event date must be in the future');
+    }
+
     const newEvent = this.eventRepository.create({
       ...createEventDto,
-      date: new Date(createEventDto.date),
+      date: eventDate,
       bookedSeats: 0,
     });
+
     return this.eventRepository.save(newEvent);
   }
 
@@ -61,5 +67,28 @@ export class EventsService {
       throw new Error(`Event with ID ${eventId} not found`);
     }
     return event;
+  }
+
+  //update event
+  public async updateEvent(
+    eventId: number,
+    updateEventDto: UpdateEventDto,
+  ): Promise<Event> {
+    const event = await this.getEventDetails(eventId);
+    if (!event) {
+      throw new Error(`Event with ID ${eventId} not found`);
+    }
+    const updatedEvent = {
+      ...event,
+      ...updateEventDto,
+    };
+    if (updateEventDto.date) {
+      const eventDate = new Date(updateEventDto.date);
+      if (eventDate <= new Date()) {
+        throw new BadRequestException('Event date must be in the future');
+      }
+      updatedEvent.date = eventDate;
+    }
+    return this.eventRepository.save(updatedEvent);
   }
 }

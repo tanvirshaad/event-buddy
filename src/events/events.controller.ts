@@ -2,6 +2,7 @@ import { Controller, Param, ParseIntPipe } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { Get, Post, Body } from '@nestjs/common';
 import { CreateEventDto } from './dtos/create-event.dto';
+import { UpdateEventDto } from './dtos/update-event.dto';
 
 @Controller('events')
 export class EventsController {
@@ -30,5 +31,13 @@ export class EventsController {
   @Get(':id')
   public async getEventDetails(@Param('id', ParseIntPipe) eventId: number) {
     return this.eventsService.getEventDetails(eventId);
+  }
+
+  @Post(':id/')
+  public async updateEvent(
+    @Param('id', ParseIntPipe) eventId: number,
+    @Body() updateEventDto: UpdateEventDto,
+  ) {
+    return this.eventsService.updateEvent(eventId, updateEventDto);
   }
 }

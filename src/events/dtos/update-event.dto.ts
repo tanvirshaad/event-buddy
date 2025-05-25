@@ -23,4 +23,7 @@ export class UpdateEventDto {
   @Min(1)
   @IsOptional()
   totalCapacity?: number;
+
+  @IsOptional()
+  bookedSeats?: number;
 }

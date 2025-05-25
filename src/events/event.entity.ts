@@ -1,5 +1,12 @@
-import { Entity, PrimaryGeneratedColumn } from 'typeorm';
-import { Column, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Booking } from '../bookings/booking.entity';
 
 @Entity('events')
 export class Event {
@@ -32,4 +39,7 @@ export class Event {
 
   @UpdateDateColumn()
   updatedAt: Date;
+
+  @OneToMany(() => Booking, (booking) => booking.event)
+  bookings: Booking[];
 }

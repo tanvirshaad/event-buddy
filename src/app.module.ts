@@ -5,6 +5,8 @@ import { EventsModule } from './events/events.module';
 // import { ConfigModule } from '@nestjs/config';
 import { Event } from './events/event.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { BookingsModule } from './bookings/bookings.module';
+import { Booking } from './bookings/booking.entity';
 
 @Module({
   imports: [
@@ -19,9 +21,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'root',
       database: 'events_db',
-      entities: [Event],
+      entities: [Event, Booking],
       synchronize: true,
     }),
+    BookingsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

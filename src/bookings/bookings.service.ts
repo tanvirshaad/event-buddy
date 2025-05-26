@@ -36,6 +36,19 @@ export class BookingsService {
       if (new Date(event.startDate) < new Date()) {
         throw new Error('Cannot book a past event');
       }
+
+      const userBookings = await this.bookingRepository.find({
+        where: { user: { id: user.id }, event: { id: eventId } },
+      });
+      const totalBookedByUser = userBookings.reduce(
+        (sum, booking) => sum + booking.numberOfSeats,
+        0,
+      );
+      //preventing overbooking
+      if (totalBookedByUser > 4) {
+        throw new Error('You Cannot book more than 4 seats for the same event');
+      }
+
       // Check if enough seats are available
       if (event.totalCapacity - event.bookedSeats < numberOfSeats) {
         throw new Error('Not enough seats available');

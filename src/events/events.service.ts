@@ -4,7 +4,6 @@ import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { CreateEventDto } from './dtos/create-event.dto';
 import { UpdateEventDto } from './dtos/update-event.dto';
-import e from 'express';
 
 @Injectable()
 export class EventsService {

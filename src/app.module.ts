@@ -7,13 +7,14 @@ import { Event } from './events/event.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BookingsModule } from './bookings/bookings.module';
 import { Booking } from './bookings/booking.entity';
+import { UsersModule } from './users/users.module';
+import { User } from './users/user.entity';
 
 @Module({
   imports: [
     // ConfigModule.forRoot({
     //   isGlobal: true,
     // }),
-    EventsModule,
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: 'localhost',
@@ -21,10 +22,12 @@ import { Booking } from './bookings/booking.entity';
       username: 'postgres',
       password: 'root',
       database: 'events_db',
-      entities: [Event, Booking],
+      entities: [Event, Booking, User],
       synchronize: true,
     }),
+    EventsModule,
     BookingsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

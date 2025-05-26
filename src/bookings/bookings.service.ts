@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Booking } from './booking.entity';
 import { EventsService } from '../events/events.service';
 import { CreateBookingDto } from './dtos/create-booking.dto';
+import { UsersService } from '../users/users.service'; // Adjust the import path as necessary
 
 @Injectable()
 export class BookingsService {
@@ -11,6 +12,7 @@ export class BookingsService {
     @InjectRepository(Booking)
     private readonly bookingRepository: Repository<Booking>,
     private readonly eventsService: EventsService,
+    private readonly usersService: UsersService,
   ) {}
 
   public async createBooking(
@@ -18,10 +20,13 @@ export class BookingsService {
     userId: number,
   ): Promise<Booking> {
     const { eventId, numberOfSeats } = createBookingDto;
-
     // Validate the event exists
     try {
       const event = await this.eventsService.getEventDetails(eventId);
+      const user = await this.usersService.getUserById(userId);
+      if (!user) {
+        throw new Error('User not found');
+      }
       if (!event) {
         throw new Error('Event not found');
       }
@@ -32,9 +37,8 @@ export class BookingsService {
 
       // Create the booking
       const booking = this.bookingRepository.create({
-        userId,
+        user,
         event,
-        eventId,
         numberOfSeats,
       });
       // Update the event's booked seats
@@ -69,8 +73,8 @@ export class BookingsService {
   public async getUserBookings(userId: number): Promise<Booking[]> {
     try {
       return await this.bookingRepository.find({
-        where: { userId },
-        relations: ['event'],
+        where: { user: { id: userId } },
+        relations: ['event', 'user'],
       });
     } catch (error) {
       throw error instanceof Error

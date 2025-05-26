@@ -5,8 +5,10 @@ import {
   Column,
   CreateDateColumn,
   UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { Booking } from '../bookings/booking.entity';
+import { User } from '../users/user.entity';
 
 @Entity('events')
 export class Event {

@@ -5,7 +5,6 @@ import { Booking } from './booking.entity';
 import { EventsModule } from '../events/events.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { UsersModule } from 'src/users/users.module';
-import { User } from 'src/users/user.entity';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Booking]), EventsModule, UsersModule],

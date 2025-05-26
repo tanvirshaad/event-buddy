@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Booking } from './booking.entity';
+import { Event } from '../events/event.entity';
 import { EventsService } from '../events/events.service';
 import { CreateBookingDto } from './dtos/create-booking.dto';
 import { UsersService } from '../users/users.service'; // Adjust the import path as necessary
@@ -11,6 +12,7 @@ export class BookingsService {
   constructor(
     @InjectRepository(Booking)
     private readonly bookingRepository: Repository<Booking>,
+
     private readonly eventsService: EventsService,
     private readonly usersService: UsersService,
   ) {}
@@ -60,17 +62,17 @@ export class BookingsService {
     }
   }
 
-  public async getAllBookings(): Promise<Booking[]> {
-    try {
-      return await this.bookingRepository.find({
-        relations: ['event'],
-      });
-    } catch (error) {
-      throw error instanceof Error
-        ? error
-        : new Error(`Failed to retrieve bookings`);
-    }
-  }
+  // public async getAllBookings(): Promise<Booking[]> {
+  //   try {
+  //     return await this.bookingRepository.find({
+  //       relations: ['event'],
+  //     });
+  //   } catch (error) {
+  //     throw error instanceof Error
+  //       ? error
+  //       : new Error(`Failed to retrieve bookings`);
+  //   }
+  // }
 
   //get user's booking
   public async getUserBookings(userId: number): Promise<Booking[]> {

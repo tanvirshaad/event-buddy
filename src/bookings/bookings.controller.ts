@@ -7,12 +7,14 @@ import {
   Query,
   Req,
   Request,
+  UseGuards,
 } from '@nestjs/common';
 
 import { BookingsService } from './bookings.service';
 import { EventsService } from '../events/events.service';
 import { CreateBookingDto } from './dtos/create-booking.dto';
 import { Booking } from './booking.entity';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
 @Controller('bookings')
 export class BookingsController {

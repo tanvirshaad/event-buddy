@@ -31,12 +31,8 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column({
-    type: 'enum',
-    enum: Role,
-    default: Role.USER,
-  })
-  role: Role; // Changed from roles[] to role
+  @Column({ type: 'enum', enum: ['user', 'admin'], default: 'user' })
+  role: 'user' | 'admin';
 
   @OneToMany(() => Booking, (booking) => booking.user)
   bookings: Booking[];

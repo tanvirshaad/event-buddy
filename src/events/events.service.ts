@@ -91,4 +91,13 @@ export class EventsService {
     }
     return this.eventRepository.save(updatedEvent);
   }
+
+  //delete event
+  public async deleteEvent(eventId: number): Promise<void> {
+    const event = await this.getEventDetails(eventId);
+    if (!event) {
+      throw new Error(`Event with ID ${eventId} not found`);
+    }
+    await this.eventRepository.remove(event);
+  }
 }

@@ -3,8 +3,6 @@ import {
   Post,
   Body,
   Get,
-  ParseIntPipe,
-  Query,
   Req,
   Request,
   UseGuards,
@@ -23,6 +21,7 @@ export class BookingsController {
     private readonly eventsService: EventsService,
   ) {}
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   public async createBooking(
     @Body() createBookingDto: CreateBookingDto,
@@ -35,6 +34,8 @@ export class BookingsController {
   public async getAllBookings(): Promise<Booking[]> {
     return this.bookingsService.getAllBookings();
   }
+
+  @UseGuards(JwtAuthGuard)
   @Get('/myBookings')
   public async getUserBookings(
     @Req() req: Request & { user: { id: number } },

@@ -30,12 +30,15 @@ export class BookingsService {
       if (!event) {
         throw new Error('Event not found');
       }
+      //prevent booking an event that has already passed
+      if (new Date(event.date) < new Date()) {
+        throw new Error('Cannot book a past event');
+      }
       // Check if enough seats are available
       if (event.totalCapacity - event.bookedSeats < numberOfSeats) {
         throw new Error('Not enough seats available');
       }
 
-      // Create the booking
       const booking = this.bookingRepository.create({
         user,
         event,

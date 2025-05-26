@@ -20,7 +20,13 @@ export class Event {
   description: string;
 
   @Column({ type: 'timestamp' })
-  date: Date;
+  startDate: Date;
+
+  @Column({ type: 'timestamp' })
+  endDate: Date;
+
+  @Column('text', { array: true, default: [] })
+  tags: string[];
 
   @Column()
   location: string;

@@ -27,13 +27,22 @@ export class UpdateEventDto {
   description?: string;
 
   @ApiProperty({
-    description: 'Event date in ISO format',
+    description: 'Event start date in ISO format',
     example: '2023-10-15T10:00:00Z',
     required: false,
   })
   @IsDateString()
   @IsOptional()
-  date?: string;
+  startDate?: string;
+
+  @ApiProperty({
+    description: 'Event end date in ISO format',
+    example: '2023-10-15T12:00:00Z',
+    required: false,
+  })
+  @IsDateString()
+  @IsOptional()
+  endDate?: string;
 
   @ApiProperty({
     description: 'Event location',

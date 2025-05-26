@@ -23,12 +23,28 @@ export class CreateEventDto {
   description: string;
 
   @ApiProperty({
-    description: 'Event date in ISO format',
+    description: 'Event start date in ISO format',
     example: '2023-10-15T10:00:00Z',
   })
   @IsDateString()
   @IsNotEmpty()
-  date: string;
+  startDate: string;
+
+  @ApiProperty({
+    description: 'Event end date in ISO format',
+    example: '2023-10-15T18:00:00Z',
+  })
+  @IsDateString()
+  @IsNotEmpty()
+  endDate: string;
+
+  @ApiProperty({
+    description: 'Event tags for categorization',
+    example: ['technology', 'conference', 'networking'],
+  })
+  @IsString({ each: true })
+  @IsNotEmpty({ each: true })
+  tags: string[];
 
   @ApiProperty({
     description: 'Event location',

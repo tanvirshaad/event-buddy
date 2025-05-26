@@ -4,6 +4,7 @@ import { LessThan, MoreThanOrEqual, Repository } from 'typeorm';
 import { Event } from './event.entity';
 import { CreateEventDto } from './dtos/create-event.dto';
 import { UpdateEventDto } from './dtos/update-event.dto';
+import e from 'express';
 
 @Injectable()
 export class EventsService {
@@ -13,15 +14,20 @@ export class EventsService {
   ) {}
 
   public async createEvent(createEventDto: CreateEventDto): Promise<Event> {
-    const eventDate = new Date(createEventDto.date);
+    const eventStartDate = new Date(createEventDto.startDate);
+    const eventEndDate = new Date(createEventDto.endDate);
 
-    if (eventDate <= new Date()) {
+    if (eventStartDate <= new Date()) {
       throw new BadRequestException('Event date must be in the future');
+    }
+    if (eventEndDate <= eventStartDate) {
+      throw new BadRequestException('Event end date must be after start date');
     }
 
     const newEvent = this.eventRepository.create({
       ...createEventDto,
-      date: eventDate,
+      startDate: eventStartDate,
+      endDate: eventEndDate,
       bookedSeats: 0,
     });
 
@@ -37,10 +43,10 @@ export class EventsService {
     const currentDate = new Date();
     return this.eventRepository.find({
       where: {
-        date: MoreThanOrEqual(currentDate),
+        startDate: MoreThanOrEqual(currentDate),
       },
       order: {
-        date: 'ASC',
+        startDate: 'ASC',
       },
     });
   }
@@ -50,10 +56,10 @@ export class EventsService {
     const currentDate = new Date();
     return this.eventRepository.find({
       where: {
-        date: LessThan(currentDate),
+        endDate: LessThan(currentDate),
       },
       order: {
-        date: 'DESC',
+        endDate: 'DESC',
       },
     });
   }
@@ -82,12 +88,14 @@ export class EventsService {
       ...event,
       ...updateEventDto,
     };
-    if (updateEventDto.date) {
-      const eventDate = new Date(updateEventDto.date);
-      if (eventDate <= new Date()) {
+    if (updateEventDto.startDate && updateEventDto.endDate) {
+      const startDate = new Date(updateEventDto.startDate);
+      const endDate = new Date(updateEventDto.endDate);
+      if (startDate <= new Date()) {
         throw new BadRequestException('Event date must be in the future');
       }
-      updatedEvent.date = eventDate;
+      updatedEvent.startDate = startDate;
+      updatedEvent.endDate = endDate;
     }
     return this.eventRepository.save(updatedEvent);
   }

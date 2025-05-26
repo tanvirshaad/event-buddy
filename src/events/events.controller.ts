@@ -29,7 +29,7 @@ export class EventsController {
   @ApiBadRequestResponse({ description: 'Invalid input' })
   @ApiBearerAuth('JWT')
   @ApiForbiddenResponse({ description: 'Admin access required' })
-  @UseGuards(AdminGuard)
+  @UseGuards(JwtAuthGuard, AdminGuard)
   @Post()
   public async createEvent(@Body() createEventDto: CreateEventDto) {
     return this.eventsService.createEvent(createEventDto);

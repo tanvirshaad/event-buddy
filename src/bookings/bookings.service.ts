@@ -33,7 +33,7 @@ export class BookingsService {
         throw new Error('Event not found');
       }
       //prevent booking an event that has already passed
-      if (new Date(event.date) < new Date()) {
+      if (new Date(event.startDate) < new Date()) {
         throw new Error('Cannot book a past event');
       }
       // Check if enough seats are available
